@@ -4,14 +4,12 @@ import { Metadata, Viewport } from "next"
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
-import RetroGrid from "@/components/magicui/retro-grid"
-import ScrollingTimeline from "@/components/magicui/scrolling-timeline"
+import { SecurityGuard } from "@/components/security-guard"
+import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
-
-import GameCard from "./game-card/page"
-import { SiteFooter } from "@/components/site-footer"
+import { DashboardLayoutElements } from "@/components/dashboard-layout-elements"
 
 export const viewport: Viewport = {
   themeColor: [
@@ -60,6 +58,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             fontSans.variable
           )}
         >
+          <SecurityGuard />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
               <SiteHeader />
@@ -67,18 +66,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 {children}
               </div>
             </div>
-            {/* <div className="pt-20"> */}
-            <ScrollingTimeline />
-
-            {/* </div> */}
-            <GameCard />
+            
+            <DashboardLayoutElements />
+            
             <SiteFooter className=" fixed border-t bottom-0 inset-x-0 sm:static" />
-
-            {/* <div className="fixed bottom-0 inset-x-0 sm:static bg-neutral-900/3"> */}
-
-            {/* </div> */}
             <TailwindIndicator />
-
           </ThemeProvider>
         </body>
       </html>

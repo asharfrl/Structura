@@ -27,9 +27,9 @@ const facts = [
   },
   {
     id: "4",
-    title: "Mesin Pencari Google Super Cepat",
-    content: "Struktur data Pohon (B-Tree/Trie) digunakan untuk membuat rute pencarian bercabang yang memungkinkan mesin pencarian memilah miliaran data dalam wujud hierarki pada sepersekian detik.",
-    icon: "🌲",
+    title: "Memori RAM & Array",
+    content: "Tahukah kamu? RAM pada komputermu cara kerjanya mirip seperti Array raksasa! Setiap byte memori memiliki 'indeks' unik yang disebut alamat memori. Saat program membuka foto, ia mengakses jutaan 'indeks' array piksel dalam hitungan milidetik.",
+    icon: "💾",
     color: "#1E86FF",
   },
 ];
