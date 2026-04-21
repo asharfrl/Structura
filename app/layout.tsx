@@ -18,20 +18,21 @@ export const viewport: Viewport = {
   ],
 }
 
+const BASE_URL = "https://structura-app-git-main-ashar-farials-projects.vercel.app";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  metadataBase: new URL(BASE_URL),
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: siteConfig.name,
-    startupImage: [
-      { url: "/logobase-dark.jpg" }
-    ],
+    startupImage: [{ url: "/logobase-dark.jpg" }],
   },
   icons: {
     icon: [
@@ -40,6 +41,29 @@ export const metadata: Metadata = {
     ],
     shortcut: "/fav.ico",
     apple: "/logobase-dark.jpg",
+  },
+  openGraph: {
+    type: "website",
+    url: BASE_URL,
+    siteName: siteConfig.name,
+    title: "STRUCTURA — Platform Belajar Struktur Data Kelas X",
+    description: siteConfig.description,
+    images: [
+      {
+        url: "/logobase.png",
+        width: 1200,
+        height: 630,
+        alt: "Structura — Platform Belajar Struktur Data",
+      },
+    ],
+    locale: "id_ID",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@structura_app",
+    title: "STRUCTURA — Platform Belajar Struktur Data Kelas X",
+    description: siteConfig.description,
+    images: ["/logobase.png"],
   },
 }
 
