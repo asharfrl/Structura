@@ -18,27 +18,31 @@ import {
   type TopicId,
 } from "@/lib/progress";
 
-// YouTube video IDs for each topic (curated educational content)
-const VIDEO_MAP: Record<TopicId, { videoId: string; title: string; channel: string }> = {
+// Video sources for each topic (YouTube or Local)
+const VIDEO_MAP: Record<TopicId, { type: "youtube" | "local"; src: string; title: string; channel: string }> = {
   array: {
-    videoId: "55l-aZ7_name",
-    title: "Array dan Larik dalam C++ – Pemula",
-    channel: "Programmer Zaman Now",
+    type: "youtube",
+    src: "WtBF_-pLrjE",
+    title: "Pendahuluan Array – Belajar C++ Dasar",
+    channel: "Kelas Terbuka",
   },
   "linked-list": {
-    videoId: "WwfhLC16bis",
+    type: "youtube",
+    src: "WwfhLC16bis",
     title: "Linked List C++ – Struktur Data",
     channel: "Kelas Terbuka",
   },
   stack: {
-    videoId: "I5lq6sCuABE",
-    title: "Stack (Tumpukan) – Struktur Data C++",
-    channel: "Kelas Terbuka",
+    type: "local",
+    src: "/video/stack-video.mp4",
+    title: "Simulasi Stack (Tumpukan) – Materi Lokal",
+    channel: "Structura Internal",
   },
   queue: {
-    videoId: "XuCbpw6Bj1U",
-    title: "Queue (Antrian) – Struktur Data C++",
-    channel: "Kelas Terbuka",
+    type: "local",
+    src: "/video/queue-video.mp4",
+    title: "Simulasi Queue (Antrean) – Materi Lokal",
+    channel: "Structura Internal",
   },
 };
 
@@ -117,15 +121,26 @@ export default function VideoPage() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="relative overflow-hidden rounded-2xl border border-border shadow-2xl bg-black aspect-video"
+          className="relative overflow-hidden rounded-2xl border border-border shadow-2xl bg-black aspect-video flex items-center justify-center text-white"
         >
-          <iframe
-            src={`https://www.youtube.com/embed/${video.videoId}?rel=0&modestbranding=1`}
-            title={video.title}
-            className="absolute inset-0 h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {video.type === "youtube" ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${video.src}?rel=0&modestbranding=1`}
+              title={video.title}
+              className="absolute inset-0 h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <video 
+              src={video.src}
+              controls
+              className="absolute inset-0 h-full w-full object-contain"
+              poster="/og-image.png"
+            >
+              Browser Anda tidak mendukung tag video.
+            </video>
+          )}
         </motion.div>
 
         {/* Video info */}

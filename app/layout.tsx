@@ -21,11 +21,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Structura - Media Pembelajaran Struktur Data Interaktif",
   description: "Platform belajar Array, Linked List, Stack, dan Queue untuk siswa SMA Kelas X (Fase E). Dilengkapi dengan Video Series dan Auto-Grader C++.",
-  metadataBase: new URL("https://structura-um.vercel.app"),
+  metadataBase: new URL("https://structura-app.vercel.app"),
   openGraph: {
     title: "Structura - Media Pembelajaran Struktur Data Interaktif",
     description: "Platform belajar Array, Linked List, Stack, dan Queue untuk siswa SMA Kelas X (Fase E). Dilengkapi dengan Video Series dan Auto-Grader C++.",
-    url: "https://structura-um.vercel.app",
+    url: "https://structura-app.vercel.app",
     siteName: "Structura UM",
     images: [
       {
