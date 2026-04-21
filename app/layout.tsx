@@ -18,21 +18,40 @@ export const viewport: Viewport = {
   ],
 }
 
-const BASE_URL = "https://structura-app-git-main-ashar-farials-projects.vercel.app";
-
 export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+  title: "Structura - Media Pembelajaran Struktur Data Interaktif",
+  description: "Platform belajar Array, Linked List, Stack, dan Queue untuk siswa SMA Kelas X (Fase E). Dilengkapi dengan Video Series dan Auto-Grader C++.",
+  metadataBase: new URL("https://structura-um.vercel.app"),
+  openGraph: {
+    title: "Structura - Media Pembelajaran Struktur Data Interaktif",
+    description: "Platform belajar Array, Linked List, Stack, dan Queue untuk siswa SMA Kelas X (Fase E). Dilengkapi dengan Video Series dan Auto-Grader C++.",
+    url: "https://structura-um.vercel.app",
+    siteName: "Structura UM",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Structura OG Image Preview",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
   },
-  description: siteConfig.description,
-  metadataBase: new URL(BASE_URL),
+  twitter: {
+    card: "summary_large_image",
+    title: "Structura - Media Pembelajaran Struktur Data Interaktif",
+    description: "Platform belajar Array, Linked List, Stack, dan Queue untuk siswa SMA Kelas X (Fase E). Dilengkapi dengan Video Series dan Auto-Grader C++.",
+    images: ["/og-image.png"],
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: siteConfig.name,
-    startupImage: [{ url: "/logobase-dark.jpg" }],
+    title: "Structura UM",
+    startupImage: [
+      { url: "/logobase-dark.jpg" }
+    ],
   },
   icons: {
     icon: [
@@ -41,29 +60,6 @@ export const metadata: Metadata = {
     ],
     shortcut: "/fav.ico",
     apple: "/logobase-dark.jpg",
-  },
-  openGraph: {
-    type: "website",
-    url: BASE_URL,
-    siteName: siteConfig.name,
-    title: "STRUCTURA — Platform Belajar Struktur Data Kelas X",
-    description: siteConfig.description,
-    images: [
-      {
-        url: "/logobase.png",
-        width: 1200,
-        height: 630,
-        alt: "Structura — Platform Belajar Struktur Data",
-      },
-    ],
-    locale: "id_ID",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@structura_app",
-    title: "STRUCTURA — Platform Belajar Struktur Data Kelas X",
-    description: siteConfig.description,
-    images: ["/logobase.png"],
   },
 }
 
