@@ -10,7 +10,7 @@ import { useRef, useState } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
+import { cn, stripMarkdown } from "@/lib/utils";
 import type { CodingChallenge } from "@/lib/apas-content/cpp-simulator";
 import { simulateCpp } from "@/lib/apas-content/cpp-simulator";
 
@@ -108,10 +108,10 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
       {/* Challenge description */}
       <div className="rounded-xl border border-border bg-muted/30 px-5 py-4">
         <h4 className="font-semibold text-base text-foreground mb-2">
-          🧩 {challenge.title}
+          🧩 {stripMarkdown(challenge.title)}
         </h4>
         <div className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-          {challenge.description}
+          {stripMarkdown(challenge.description)}
         </div>
       </div>
 
@@ -192,9 +192,9 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
         <button
           id="apas-reveal-btn"
           onClick={() => setShowSolution((s) => !s)}
-          className="ml-auto flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-5 py-2.5 text-sm font-semibold text-amber-800 hover:bg-amber-100 transition-all dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300 active:scale-95"
+          className="w-full sm:w-auto sm:ml-auto mt-2 sm:mt-0 flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-5 py-2.5 text-sm font-semibold text-amber-800 hover:bg-amber-100 transition-all dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300 active:scale-95"
         >
-          💡 {showSolution ? "Sembunyikan" : "Reveal Solution"}
+          💡 {showSolution ? "Sembunyikan" : "Buka Solusi"}
         </button>
       </div>
 
@@ -271,7 +271,7 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
             {/* Explanation */}
             <div className="prose prose-sm max-w-none text-amber-900 dark:text-amber-200">
               <div className="text-sm leading-relaxed whitespace-pre-line">
-                {challenge.solutionExplanation}
+                {stripMarkdown(challenge.solutionExplanation)}
               </div>
             </div>
           </motion.div>

@@ -12,6 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import RetroGrid from "@/components/magicui/retro-grid";
 import { setStageComplete, isValidTopic, type TopicId } from "@/lib/progress";
+import { stripMarkdown } from "@/lib/utils";
 
 // Topic content map
 import { materiArray } from "@/lib/apas-content/array";
@@ -108,11 +109,11 @@ export default function MateriPage() {
                 >
                   {i + 1}
                 </span>
-                {section.heading}
+                {stripMarkdown(section.heading)}
               </h2>
 
               <div className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-                {section.content}
+                {stripMarkdown(section.content)}
               </div>
 
               {section.visual && (

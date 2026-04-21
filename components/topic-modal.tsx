@@ -9,7 +9,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, stripMarkdown } from "@/lib/utils";
 import {
   getProgress,
   isStageUnlocked,
@@ -94,11 +94,11 @@ export default function TopicModal({
           {/* Modal */}
           <motion.div
             key="modal"
-            initial={{ opacity: 0, y: 60, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 350, damping: 30 }}
-            className="relative z-10 w-full max-w-lg sm:max-w-3xl"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+            className="relative z-10 w-full max-w-lg sm:max-w-3xl transform-gpu will-change-transform"
           >
             <div className="relative flex flex-col gap-5 rounded-t-3xl sm:rounded-3xl border border-border bg-background/95 backdrop-blur-xl p-6 shadow-2xl w-full">
               {/* Close button */}
@@ -135,11 +135,12 @@ export default function TopicModal({
                   </span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: topicColor }}
-                    animate={{ width: `${(completionCount / 3) * 100}%` }}
-                    transition={{ duration: 0.5, type: "spring" }}
+                  <div
+                    className="h-full rounded-full transition-none"
+                    style={{ 
+                      backgroundColor: topicColor,
+                      width: `${(completionCount / 3) * 100}%`
+                    }}
                   />
                 </div>
               </div>
@@ -185,13 +186,13 @@ export default function TopicModal({
                           completed ? "text-emerald-700 dark:text-emerald-400" :
                           unlocked ? "text-foreground" : "text-muted-foreground"
                         )}>
-                          {stage.label}
+                          {stripMarkdown(stage.label)}
                           {completed && " — Selesai"}
                         </p>
                         <p className="text-xs text-muted-foreground mt-0.5 truncate">
                           {!unlocked && stage.unlockNote
-                            ? `🔒 ${stage.unlockNote}`
-                            : stage.description}
+                            ? `🔒 ${stripMarkdown(stage.unlockNote)}`
+                            : stripMarkdown(stage.description)}
                         </p>
                       </div>
 
