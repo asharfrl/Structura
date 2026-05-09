@@ -79,7 +79,7 @@ export default function TopicModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-end sm:justify-center overflow-hidden">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-end sm:items-center sm:justify-center overflow-hidden">
           {/* Backdrop */}
           <motion.div
             key="backdrop"

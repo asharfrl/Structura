@@ -94,7 +94,7 @@ export default function IndexPage() {
             Mulai Belajar
           </button>
           <Link
-            href="https://buku.kemdikbud.go.id"
+            href="https://drive.google.com/file/d/1qFaRlHTyV9PCn3vtMJAJi2By9gyYTRIK/view?usp=sharing"
             target="_blank"
             rel="noreferrer"
             className={buttonVariants({ variant: "outline" })}

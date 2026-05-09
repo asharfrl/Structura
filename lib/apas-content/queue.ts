@@ -296,6 +296,7 @@ return nilai;
       expectedOutput:
         "Enqueue: Laporan\nEnqueue: Gambar\nEnqueue: Sertifikat\nDequeue: Laporan\nFRONT sekarang: Gambar",
       requiredPatterns: [/q\.rear\+\+/, /q\.front\+\+/, /q\.data\[q\.(front|rear)\]/],
+      topicHint: "queue" as const,
     },
   ],
 };

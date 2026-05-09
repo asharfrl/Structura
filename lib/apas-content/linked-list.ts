@@ -287,6 +287,7 @@ while (current != NULL) {
         /current\s*!=\s*NULL/,
         /current\s*=\s*current->next/,
       ],
+      topicHint: "linked-list" as const,
     },
   ],
 };

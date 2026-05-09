@@ -3,7 +3,8 @@
 /**
  * components/apas/quiz-coding.tsx
  * Part 2 of APAS: Interactive Monaco code editor with C++ simulation grader.
- * Provides error highlighting, retry, and educational solution reveal.
+ * Provides error highlighting, retry, educational solution reveal, and
+ * curriculum-aligned pedagogical hints (Bab 2 Kelas X).
  */
 
 import { useRef, useState } from "react";
@@ -29,6 +30,7 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
   const [runState, setRunState] = useState<RunState>("idle");
   const [output, setOutput] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [pedagogicalHint, setPedagogicalHint] = useState<string | null>(null);
   const [showSolution, setShowSolution] = useState(false);
   const [completed, setCompleted] = useState(false);
 
@@ -39,14 +41,12 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
     monacoRef.current = monacoInstance;
   }
 
-  /** Clear any previous error decorations */
   function clearDecorations() {
     if (editorRef.current) {
       editorRef.current.deltaDecorations([], []);
     }
   }
 
-  /** Highlight an error on a specific line */
   function highlightErrorLine(lineNumber: number) {
     if (!editorRef.current || !monacoRef.current) return;
     editorRef.current.deltaDecorations(
@@ -74,8 +74,8 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
     setRunState("running");
     setOutput("");
     setErrorMsg(null);
+    setPedagogicalHint(null);
 
-    // Simulate async "compilation"
     await new Promise((r) => setTimeout(r, 800));
 
     const result = simulateCpp(code, challenge);
@@ -89,6 +89,7 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
       setRunState("error");
       setOutput(result.output);
       setErrorMsg(result.errorMessage);
+      setPedagogicalHint(result.pedagogicalHint);
       if (result.errorLine) {
         highlightErrorLine(result.errorLine);
       }
@@ -100,6 +101,7 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
     setRunState("idle");
     setOutput("");
     setErrorMsg(null);
+    setPedagogicalHint(null);
     setCode(challenge.starterCode);
   }
 
@@ -117,7 +119,6 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
 
       {/* Editor */}
       <div className="relative overflow-hidden rounded-xl border border-border shadow-lg">
-        {/* Editor header */}
         <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-white/10">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-red-500" />
@@ -233,6 +234,26 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
         )}
       </AnimatePresence>
 
+      {/* ── Pedagogical Hint — Curriculum-aligned feedback (Bab 2 Kelas X) ── */}
+      <AnimatePresence>
+        {pedagogicalHint && runState === "error" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.25 }}
+            className="rounded-xl border border-blue-300 bg-blue-50/80 px-5 py-4 dark:border-blue-700 dark:bg-blue-950/30"
+          >
+            <p className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-1.5">
+              📚 Petunjuk Kurikulum — Bab 2 Kelas X
+            </p>
+            <p className="text-sm leading-relaxed text-blue-900 dark:text-blue-200">
+              {pedagogicalHint}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Solution reveal */}
       <AnimatePresence>
         {showSolution && (
@@ -243,10 +264,9 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
             className="flex flex-col gap-4 rounded-xl border border-amber-300 bg-amber-50/60 p-5 dark:border-amber-800 dark:bg-amber-950/20"
           >
             <h4 className="flex items-center gap-2 font-semibold text-amber-900 dark:text-amber-300">
-              💡 Solusi & Penjelasan
+              💡 Solusi &amp; Penjelasan
             </h4>
 
-            {/* Solution code */}
             <div className="overflow-hidden rounded-lg border border-amber-200 dark:border-amber-800">
               <div className="flex items-center gap-2 bg-[#1e1e1e] px-4 py-2 text-xs text-gray-400">
                 <span>✅ Kode Benar</span>
@@ -268,7 +288,6 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
               />
             </div>
 
-            {/* Explanation */}
             <div className="prose prose-sm max-w-none text-amber-900 dark:text-amber-200">
               <div className="text-sm leading-relaxed whitespace-pre-line">
                 {stripMarkdown(challenge.solutionExplanation)}
@@ -278,7 +297,6 @@ export default function QuizCoding({ challenge, onComplete }: QuizCodingProps) {
         )}
       </AnimatePresence>
 
-      {/* CSS for error line highlight */}
       <style>{`
         .apas-error-line {
           background-color: rgba(239,68,68,0.15) !important;

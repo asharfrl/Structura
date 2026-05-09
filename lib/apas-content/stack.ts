@@ -287,6 +287,7 @@ Untuk melakukan *Undo*, sistem membaca memori yang teratas (terakhir), lalu "mem
       description: "Push dan Pop Undo implementasi benar",
       expectedOutput: "Aksi: Ketik A\nAksi: Ketik B\nAksi: Ketik C\nUndo: Ketik C\nAksi tersisa (TOP): Ketik B",
       requiredPatterns: [/s\.top\+\+/, /s\.top--/, /s\.aksi\[s\.top\]/],
+      topicHint: "stack" as const,
     },
   ],
 };

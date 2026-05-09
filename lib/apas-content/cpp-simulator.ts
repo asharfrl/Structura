@@ -2,7 +2,9 @@
  * lib/apas-content/cpp-simulator.ts
  * A lightweight C++ code simulator for APAS grading.
  * NOT a real compiler – evaluates pre-defined test cases via pattern matching
- * and expected output comparison, suitable for high school curriculum.
+ * and expected output comparison, suitable for high school curriculum (Kelas X).
+ *
+ * Curriculum reference: Informatika Kelas X – Bab 2: Algoritma & Struktur Data
  */
 
 export interface SimulationResult {
@@ -11,6 +13,8 @@ export interface SimulationResult {
   errorLine: number | null;
   errorMessage: string | null;
   hint: string | null;
+  /** Curriculum-aligned pedagogical hint shown to student when logic fails */
+  pedagogicalHint: string | null;
 }
 
 export interface TestCase {
@@ -21,6 +25,8 @@ export interface TestCase {
   requiredPatterns: RegExp[];
   /** Pattern(s) that must NOT appear (forbidden shortcuts) */
   forbiddenPatterns?: RegExp[];
+  /** Topic keyword for pedagogical hint lookup */
+  topicHint?: "array" | "stack" | "queue" | "linked-list" | "sorting" | "searching";
 }
 
 export interface CodingChallenge {
@@ -33,9 +39,26 @@ export interface CodingChallenge {
   testCases: TestCase[];
 }
 
+// ── Curriculum-aligned pedagogical hints (Bab 2 Kelas X) ──────────────────
+
+const PEDAGOGICAL_HINTS: Record<NonNullable<TestCase["topicHint"]>, string> = {
+  array:
+    "💡 Ingat definisi Array (Larik): struktur data LINEAR yang menyimpan elemen bertipe SAMA di memori yang BERDAMPINGAN, dan setiap elemen diakses menggunakan INDEKS numerik (dimulai dari 0). Pastikan loop-mu menelusuri dari indeks 0 hingga ukuran-1.",
+  stack:
+    "💡 Stack menggunakan prinsip LIFO (Last In, First Out) — seperti tumpukan piring. Elemen yang TERAKHIR dimasukkan (PUSH ke TOP) adalah yang PERTAMA dikeluarkan (POP dari TOP). Pastikan kamu menaikkan `top` saat PUSH dan menurunkannya saat POP.",
+  queue:
+    "💡 Queue menggunakan prinsip FIFO (First In, First Out) — seperti antrean di loket bioskop. Elemen yang PERTAMA masuk (ENQUEUE ke belakang/rear) adalah yang PERTAMA keluar (DEQUEUE dari depan/front). Pastikan kamu menambah ke `rear` dan mengambil dari `front`.",
+  "linked-list":
+    "💡 Linked List adalah struktur data di mana setiap node menyimpan DATA dan POINTER (`next`) ke node berikutnya. Berbeda dengan Array, elemen tidak tersimpan berdampingan di memori. Pastikan kamu menggunakan operator `->` untuk mengakses anggota struct melalui pointer.",
+  sorting:
+    "💡 Pengurutan (Sorting) adalah proses menyusun elemen secara berurutan (naik/turun). Bubble Sort menukar dua elemen yang berdekatan, Insertion Sort menyisipkan ke posisi tepat, dan Selection Sort memilih elemen terkecil/terbesar di setiap iterasi.",
+  searching:
+    "💡 Pencarian (Searching) adalah proses menemukan item berdasarkan kriteria tertentu. Linear Search memeriksa satu per satu dari awal (O(n)), sedangkan Binary Search hanya bisa digunakan pada data terurut dan membagi ruang pencarian separuh setiap langkah (O(log n)).",
+};
+
 /**
  * Simulates running student C++ code against test cases.
- * Returns structured result with error/success info.
+ * Returns structured result with error/success info and pedagogical hint.
  */
 export function simulateCpp(
   code: string,
@@ -50,6 +73,7 @@ export function simulateCpp(
       errorLine: null,
       errorMessage: "Kode masih kosong atau belum diubah dari template awal.",
       hint: "Coba tulis logika program terlebih dahulu.",
+      pedagogicalHint: null,
     };
   }
 
@@ -64,6 +88,7 @@ export function simulateCpp(
             errorLine: findPatternLine(code, pattern),
             errorMessage: `Penggunaan tidak diizinkan terdeteksi. Gunakan implementasi manual.`,
             hint: "Coba implementasikan logika secara manual tanpa library bawaan.",
+            pedagogicalHint: tc.topicHint ? PEDAGOGICAL_HINTS[tc.topicHint] : null,
           };
         }
       }
@@ -81,6 +106,7 @@ export function simulateCpp(
           errorLine: null,
           errorMessage: `Logika tidak lengkap: ${missingHint}`,
           hint: missingHint,
+          pedagogicalHint: tc.topicHint ? PEDAGOGICAL_HINTS[tc.topicHint] : null,
         };
       }
     }
@@ -97,17 +123,20 @@ export function simulateCpp(
       errorLine: null,
       errorMessage: null,
       hint: null,
+      pedagogicalHint: null,
     };
   }
 
   // Output mismatch
   const errorLine = detectErrorLine(code, challenge);
+  const topicHint = challenge.testCases[0].topicHint;
   return {
     success: false,
     output: `--- Output diterima ---\n${simulatedOutput}\n\n--- Output diharapkan ---\n${expectedOutput}`,
     errorLine,
     errorMessage: "Output tidak sesuai dengan yang diharapkan.",
     hint: "Periksa logika loop dan kondisi pada kode Anda.",
+    pedagogicalHint: topicHint ? PEDAGOGICAL_HINTS[topicHint] : null,
   };
 }
 
@@ -126,15 +155,19 @@ function getMissingPatternHint(pattern: RegExp): string {
   if (src.includes("for") || src.includes("while"))
     return "Diperlukan struktur perulangan (for/while).";
   if (src.includes("cout")) return "Diperlukan perintah output (cout).";
-  if (src.includes("push")) return "Diperlukan operasi push().";
-  if (src.includes("pop")) return "Diperlukan operasi pop().";
+  if (src.includes("push") || src.includes("top\\+\\+"))
+    return "Diperlukan operasi PUSH — naikkan top, lalu simpan nilai di stack[top].";
+  if (src.includes("pop") || src.includes("top--"))
+    return "Diperlukan operasi POP — ambil nilai dari stack[top], lalu turunkan top.";
   if (src.includes("enqueue") || src.includes("rear"))
-    return "Diperlukan operasi enqueue (tambah ke belakang antrian).";
+    return "Diperlukan operasi ENQUEUE — tambahkan ke posisi rear (belakang antrian/FIFO).";
   if (src.includes("dequeue") || src.includes("front"))
-    return "Diperlukan operasi dequeue (ambil dari depan antrian).";
+    return "Diperlukan operasi DEQUEUE — ambil dari posisi front (depan antrian/FIFO).";
   if (src.includes("next") || src.includes("->"))
-    return "Diperlukan penggunaan pointer (->next).";
-  return "Pastikan struktur kode sesuai dengan soal.";
+    return "Diperlukan penggunaan pointer (->next) untuk traversal Linked List.";
+  if (src.includes("arr\\[i\\]") || src.includes("nilai\\[i\\]"))
+    return "Diperlukan akses elemen array menggunakan indeks (arr[i]).";
+  return "Pastikan struktur kode sesuai dengan soal dan definisi dari buku.";
 }
 
 /** Simulate the expected output based on detected patterns */
@@ -168,3 +201,6 @@ function detectErrorLine(code: string, challenge: CodingChallenge): number | nul
   }
   return null;
 }
+
+
+

@@ -53,7 +53,8 @@ export default function MateriPage() {
   const handleComplete = () => {
     setStageComplete(topicId as TopicId, "materi");
     setDone(true);
-    setTimeout(() => router.push(`/${topicId}/kuis`), 1500);
+    // Direct navigation to next stage — no detour through dashboard
+    setTimeout(() => router.push(`/${topicId}/kuis`), 800);
   };
 
   return (

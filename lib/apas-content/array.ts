@@ -211,6 +211,7 @@ Variabel \`i\` digunakan sebagai **indeks dinamis** yang berubah setiap iterasi,
         /cout/,
         /arr\[i\]/,
       ],
+      topicHint: "array" as const,
     },
   ],
 };
