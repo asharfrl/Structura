@@ -18,31 +18,31 @@ import {
   type TopicId,
 } from "@/lib/progress";
 
-// Video sources for each topic (YouTube or Local)
-const VIDEO_MAP: Record<TopicId, { type: "youtube" | "local"; src: string; title: string; channel: string }> = {
+// Video sources for each topic (Google Drive embed)
+const VIDEO_MAP: Record<TopicId, { type: "youtube" | "gdrive"; src: string; title: string; channel: string }> = {
   array: {
-    type: "youtube",
-    src: "WtBF_-pLrjE",
-    title: "Pendahuluan Array – Belajar C++ Dasar",
-    channel: "Kelas Terbuka",
+    type: "gdrive",
+    src: "1b2wGnszVCkDM_KL1i6VRY4t_yg8rWq9D",
+    title: "Array – PSBI Animation",
+    channel: "PSBI ANIMATION",
   },
   "linked-list": {
-    type: "youtube",
-    src: "WwfhLC16bis",
-    title: "Linked List C++ – Struktur Data",
-    channel: "Kelas Terbuka",
+    type: "gdrive",
+    src: "1XLxXLXMFu8jflsriKIEg1CwAzoi2T4es",
+    title: "Linked List – PSBI Animation",
+    channel: "PSBI ANIMATION",
   },
   stack: {
-    type: "local",
-    src: "/video/stack-video.mp4",
-    title: "Simulasi Stack (Tumpukan) – Materi Lokal",
-    channel: "Structura Internal",
+    type: "gdrive",
+    src: "1emQW3Iv-SilxdgE23Eponcljy3a-bfc_",
+    title: "Stack – PSBI Animation",
+    channel: "PSBI ANIMATION",
   },
   queue: {
-    type: "local",
-    src: "/video/queue-video.mp4",
-    title: "Simulasi Queue (Antrean) – Materi Lokal",
-    channel: "Structura Internal",
+    type: "gdrive",
+    src: "1kgolceR-YmbvURXuhnBOjVQH4Ex7fUQ0",
+    title: "Queue – PSBI Animation",
+    channel: "PSBI ANIMATION",
   },
 };
 
@@ -59,6 +59,7 @@ export default function VideoPage() {
   const topicId = params?.topic as string;
   const [done, setDone] = useState(false);
   const [alreadyComplete, setAlreadyComplete] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     if (!isValidTopic(topicId) || !isStageUnlocked(topicId as TopicId, "video")) {
@@ -123,23 +124,63 @@ export default function VideoPage() {
           transition={{ delay: 0.1 }}
           className="relative overflow-hidden rounded-2xl border border-border shadow-2xl bg-black aspect-video flex items-center justify-center text-white"
         >
+          {/* Thumbnail overlay — shown before play */}
+          {!playing && (
+            <button
+              onClick={() => setPlaying(true)}
+              className="absolute inset-0 z-10 flex flex-col items-center justify-center w-full h-full group"
+              aria-label="Putar video"
+            >
+              {/* Poster image */}
+              <img
+                src="/og-image.png"
+                alt="Video thumbnail"
+                className="absolute inset-0 w-full h-full object-cover opacity-80"
+              />
+              {/* Dark gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+              {/* Play button */}
+              <div className="relative z-10 flex flex-col items-center gap-3">
+                <div
+                  className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/60 shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30"
+                  style={{ boxShadow: `0 0 40px ${meta.color}80` }}
+                >
+                  <svg
+                    className="h-8 w-8 text-white ml-1"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-semibold text-white/90 drop-shadow">
+                  Klik untuk memutar video
+                </span>
+              </div>
+            </button>
+          )}
+
+          {/* Actual video iframe — rendered only after play clicked */}
           {video.type === "youtube" ? (
             <iframe
-              src={`https://www.youtube.com/embed/${video.src}?rel=0&modestbranding=1`}
+              src={playing
+                ? `https://www.youtube.com/embed/${video.src}?rel=0&modestbranding=1&autoplay=1`
+                : undefined}
               title={video.title}
               className="absolute inset-0 h-full w-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           ) : (
-            <video 
-              src={video.src}
-              controls
-              className="absolute inset-0 h-full w-full object-contain"
-              poster="/og-image.png"
-            >
-              Browser Anda tidak mendukung tag video.
-            </video>
+            playing && (
+              <iframe
+                src={`https://drive.google.com/file/d/${video.src}/preview`}
+                title={video.title}
+                className="absolute inset-0 h-full w-full"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+              />
+            )
           )}
         </motion.div>
 
